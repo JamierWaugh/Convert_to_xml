@@ -7,8 +7,15 @@ output_file = "output.xml"
 def saveToXml(spreadsheet, output_file):
     path_load = Path(__file__).parent / spreadsheet #Generates relative path
     path_write = Path(__file__).parent / output_file
-
-    df = pd.read_excel(path_load) #turn excel spreadsheet into panda dataframe
+    type = path_load.suffix.lower()
+    if type in [".xls", ".xlsx"]: #Enabled functionality for excel, json, csv and parquet
+        df = pd.read_excel(path_load) #turn excel spreadsheet into panda dataframe
+    elif type == ".json":
+        df = pd.read_json(path_load)
+    elif type == ".csv":
+        df = pd.read_csv(path_load)
+    elif type == ".parquet":
+        df = pd.read_parquet(path_load)
 
     xml_data = df.to_xml(root_name="data", row_name="record") #convert panda dataframe into xml
 
